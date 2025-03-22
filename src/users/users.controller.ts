@@ -24,9 +24,9 @@ import { Permissions } from 'src/common/decorators/permissions.decorator';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @UseGuards(AuthGuard('jwt'), RolesGuard, PermissionsGuard)
-  @Roles('admin')
-  @Permissions('create:user')
+  @UseGuards(AuthGuard('jwt'))
+  // @Roles('admin')
+  // @Permissions('create:user')
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     try {
@@ -83,18 +83,14 @@ export class UsersController {
     }
   }
 
-  @UseGuards(AuthGuard('jwt'), RolesGuard, PermissionsGuard)
-  @Roles('admin')
-  @Permissions('update:user')
+  @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     const user = await this.usersService.update(id, updateUserDto);
 
     return {
       statusCode: HttpStatus.OK,
-      data: {
-        ...user,
-      },
+      data: user,
     };
   }
 
@@ -117,5 +113,13 @@ export class UsersController {
       statusCode: HttpStatus.OK,
       data: 'user deleted successfully',
     };
+  }
+
+  @Patch(':id/roles')
+  async updateRoles(
+    @Param('id') userId: string,
+    @Body('roles') roleIds: number[],
+  ) {
+    return this.usersService.updateUserRoles(userId, roleIds);
   }
 }

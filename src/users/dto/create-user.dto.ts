@@ -1,5 +1,7 @@
 import {
+  IsArray,
   IsEmail,
+  IsInt,
   IsOptional,
   IsString,
   Matches,
@@ -26,4 +28,8 @@ export class CreateUserDto {
   @IsString()
   @IsOptional()
   name?: string;
+
+  @IsArray()
+  @IsInt({ each: true })
+  roles: number[];
 }

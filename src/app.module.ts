@@ -8,6 +8,10 @@ import { AlbumsModule } from './albums/albums.module';
 import { Album } from './albums/entities/album.entity';
 import { UsersModule } from './users/users.module';
 import { User } from './users/entities/user.entity';
+import { RolesModule } from './roles/roles.module';
+import { Role } from './roles/entities/role.entity';
+import { PermissionModule } from './permission/permission.module';
+import { Permission } from './permission/entities/permission.entity';
 
 @Module({
   imports: [
@@ -15,12 +19,14 @@ import { User } from './users/entities/user.entity';
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: './app.sqlite',
-      entities: [Album, User],
+      entities: [Album, User, Role, Permission],
       synchronize: process.env.NODE_ENV != 'production',
     }),
     AlbumsModule,
     UsersModule,
     AuthModule,
+    RolesModule,
+    PermissionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

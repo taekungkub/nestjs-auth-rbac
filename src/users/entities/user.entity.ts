@@ -1,6 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Permission } from 'src/permission/entities/permission.entity';
+import { Role } from 'src/roles/entities/role.entity';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-@Entity()
+@Entity('user') // ตรงกับชื่อ table
 export class User {
   @PrimaryGeneratedColumn()
   userId: string;
@@ -28,4 +36,12 @@ export class User {
     onUpdate: 'CURRENT_TIMESTAMP',
   }) // ✅ Works in SQLite
   updatedAt: Date;
+
+  @ManyToMany(() => Role, (role) => role.users, { eager: true, cascade: true })
+  @JoinTable({
+    name: 'user_roles',
+    joinColumn: { name: 'user_id', referencedColumnName: 'userId' },
+    inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' },
+  })
+  roles: Role[];
 }

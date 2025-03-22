@@ -1,6 +1,6 @@
-users
+user
 +----+------------+
-| id | username   |
+| userId | username   |
 +----+------------+
 |  1 | alice      |
 |  2 | bob        |

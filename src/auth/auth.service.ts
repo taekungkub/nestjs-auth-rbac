@@ -12,6 +12,7 @@ export class AuthService {
 
   async validateUser(username: string, password: string) {
     const user = await this.usersService.findByUsername(username);
+
     if (!user) {
       throw new BadRequestException('Invalid email or password');
     }
@@ -32,9 +33,12 @@ export class AuthService {
       username: user.username,
       email: user.email,
       name: user.name,
-      roles: ['admin'],
-      permissions: ['create:user', 'update:user'],
+      role: user.roles,
+      permissions: user.permissions,
     };
+
+    console.log(payload);
+
     const accessToken = this.jwtService.sign(payload);
 
     return { access_token: accessToken };
