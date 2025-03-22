@@ -25,7 +25,7 @@ import { JwtGuard } from 'src/common/guards/jwt.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(JwtGuard)
   // @Roles('admin')
   // @Permissions('create:user')
   @Post()
@@ -84,7 +84,7 @@ export class UsersController {
     }
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(JwtGuard)
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     const user = await this.usersService.update(id, updateUserDto);
@@ -95,7 +95,7 @@ export class UsersController {
     };
   }
 
-  @UseGuards(AuthGuard('jwt'), RolesGuard, PermissionsGuard)
+  @UseGuards(JwtGuard, RolesGuard, PermissionsGuard)
   @Roles('admin')
   @Permissions('delete:user')
   @Delete(':id')
