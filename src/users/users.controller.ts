@@ -19,6 +19,7 @@ import { RolesGuard } from 'src/common/guards/roles.guard';
 import { PermissionsGuard } from 'src/common/guards/permissions.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Permissions } from 'src/common/decorators/permissions.decorator';
+import { JwtGuard } from 'src/common/guards/jwt.guard';
 
 @Controller('users')
 export class UsersController {
@@ -47,7 +48,7 @@ export class UsersController {
     }
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(JwtGuard)
   @Get()
   async findAll() {
     try {
