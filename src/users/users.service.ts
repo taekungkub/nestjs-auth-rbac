@@ -201,7 +201,7 @@ export class UsersService {
       const base64Image = fs.readFileSync(file.path, 'base64');
       user.picture = `data:${file.mimetype};base64,${base64Image}`;
 
-      fs.unlinkSync(file.path);
+      fs.unlinkSync(file.path); // Delete file after saving
     }
 
     return this.userRepository.save(user);

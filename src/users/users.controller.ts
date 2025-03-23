@@ -14,6 +14,9 @@ import {
   UseInterceptors,
   Req,
   UploadedFile,
+  ParseFilePipe,
+  MaxFileSizeValidator,
+  FileTypeValidator,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -155,13 +158,22 @@ export class UsersController {
           cb(null, uniqueSuffix + extname(file.originalname));
         },
       }),
-      limits: { fileSize: 5 * 1024 * 1024 }, // Limit file size to 5MB
+      limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
     }),
   )
   async updateProfile(
     @Req() req,
-    @Body() updateProfileDto: UpdateProfileDto, // Accept multiple fields
-    @UploadedFile() file: Express.Multer.File, // Handle file separately
+    @Body() updateProfileDto: UpdateProfileDto,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 5 * 1024 * 1024 }), // 5MB limit
+          new FileTypeValidator({ fileType: 'image/*' }),
+        ],
+        fileIsRequired: false,
+      }),
+    )
+    file: Express.Multer.File,
   ) {
     return this.usersService.updateProfile(
       req.user['userId'],
