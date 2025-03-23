@@ -29,7 +29,6 @@ import { JwtGuard } from 'src/common/guards/jwt.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { UpdateProfileDto } from './dto/update-profile.dto';
 
 @Controller('users')
 export class UsersController {
@@ -163,7 +162,7 @@ export class UsersController {
   )
   async updateProfile(
     @Req() req,
-    @Body() updateProfileDto: UpdateProfileDto,
+    @Body() updateProfileDto: UpdateUserDto,
     @UploadedFile(
       new ParseFilePipe({
         validators: [
@@ -175,10 +174,23 @@ export class UsersController {
     )
     file: Express.Multer.File,
   ) {
-    return this.usersService.updateProfile(
-      req.user['userId'],
-      updateProfileDto,
-      file,
-    );
+    try {
+      const user = await this.usersService.updateProfile(
+        req.user['userId'],
+        updateProfileDto,
+        file,
+      );
+
+      return {
+        statusCode: HttpStatus.OK,
+        data: user,
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      }
+
+      throw new BadRequestException(`${error}`);
+    }
   }
 }

@@ -12,7 +12,6 @@ import * as bcrypt from 'bcrypt';
 import { Role } from 'src/roles/entities/role.entity';
 import { plainToInstance } from 'class-transformer';
 import * as fs from 'fs';
-import { UpdateProfileDto } from './dto/update-profile.dto';
 
 @Injectable()
 export class UsersService {
@@ -185,7 +184,7 @@ export class UsersService {
 
   async updateProfile(
     userId: string,
-    updateProfileDto: UpdateProfileDto,
+    updateUserDto: UpdateUserDto,
     file: Express.Multer.File,
   ): Promise<User> {
     const user = await this.userRepository.findOne({ where: { userId } });
@@ -194,9 +193,31 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    if (updateProfileDto.name) {
-      user.name = updateProfileDto.name;
+    if (updateUserDto.name) {
+      user.name = updateUserDto.name;
     }
+
+    if (updateUserDto.email) {
+      user.email = updateUserDto.email;
+    }
+
+    if (updateUserDto.password && updateUserDto.oldPassword) {
+      // Compare old password with stored hashed password
+      const isMatch = await bcrypt.compare(
+        updateUserDto.oldPassword,
+        user.password,
+      );
+
+      if (!isMatch) {
+        throw new Error('Old password is incorrect');
+      }
+
+      const hashedPassword = await bcrypt.hash(updateUserDto.password, 10);
+      user.password = hashedPassword;
+    } else if (updateUserDto.password && !updateUserDto.oldPassword) {
+      throw new Error('Old password is required to update password');
+    }
+
     if (file) {
       const base64Image = fs.readFileSync(file.path, 'base64');
       user.picture = `data:${file.mimetype};base64,${base64Image}`;

@@ -32,4 +32,7 @@ export class CreateUserDto {
   @IsArray()
   @IsInt({ each: true })
   roles: number[];
+
+  @IsOptional()
+  picture?: string;
 }
