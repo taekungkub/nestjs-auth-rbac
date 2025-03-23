@@ -12,16 +12,21 @@ import { RolesModule } from './roles/roles.module';
 import { Role } from './roles/entities/role.entity';
 import { PermissionModule } from './permission/permission.module';
 import { Permission } from './permission/entities/permission.entity';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    TaskModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: './app.sqlite',
       entities: [Album, User, Role, Permission],
       synchronize: process.env.NODE_ENV != 'production',
     }),
+    TaskModule,
     AlbumsModule,
     UsersModule,
     AuthModule,

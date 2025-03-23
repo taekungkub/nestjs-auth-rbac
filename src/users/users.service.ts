@@ -113,8 +113,6 @@ export class UsersService {
       excludeExtraneousValues: true,
     });
 
-    console.log(filteredData);
-
     Object.assign(user, filteredData);
 
     await this.userRepository.save(user);

@@ -37,7 +37,7 @@ export class User {
   }) // ✅ Works in SQLite
   updatedAt: Date;
 
-  @ManyToMany(() => Role, (role) => role.users, { eager: true, cascade: true })
+  @ManyToMany(() => Role, (role) => role.name, { eager: true, cascade: true })
   @JoinTable({
     name: 'user_roles',
     joinColumn: { name: 'user_id', referencedColumnName: 'userId' },

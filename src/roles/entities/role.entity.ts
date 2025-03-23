@@ -1,5 +1,4 @@
 import { Permission } from 'src/permission/entities/permission.entity';
-import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   Entity,
@@ -26,7 +25,4 @@ export class Role {
     inverseJoinColumn: { name: 'permission_id', referencedColumnName: 'id' },
   })
   permissions: Permission[];
-
-  @ManyToMany(() => User, (user) => user.roles)
-  users: User[];
 }
