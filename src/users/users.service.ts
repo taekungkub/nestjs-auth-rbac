@@ -10,6 +10,7 @@ import { User } from './entities/user.entity';
 import { Connection, In, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Role } from 'src/roles/entities/role.entity';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class UsersService {
@@ -36,7 +37,10 @@ export class UsersService {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // ✅ ค้นหา Roles ที่ส่งมา
-    const roleEntities = await this.roleRepository.findByIds(roles); // ค้นหา roles ตาม ID
+
+    const roleEntities = await this.roleRepository.find({
+      where: { id: In(roles) }, // ค้นหา roles ตาม ID
+    });
 
     if (roleEntities.length !== roles.length) {
       throw new BadRequestException('Invalid role ID(s)');
@@ -103,9 +107,15 @@ export class UsersService {
       }
 
       user.roles = roleEntities; // อัปเดต roles ใหม่
+      user.updatedAt = new Date(); // อัปเดต timestamp
     }
+    const filteredData = plainToInstance(UpdateUserDto, updateUserDto, {
+      excludeExtraneousValues: true,
+    });
 
-    Object.assign(user, updateUserDto);
+    console.log(filteredData);
+
+    Object.assign(user, filteredData);
 
     await this.userRepository.save(user);
 

@@ -102,6 +102,11 @@ export class UsersController {
   async remove(@Param('id') id: string) {
     try {
       await this.usersService.remove(id);
+
+      return {
+        statusCode: HttpStatus.OK,
+        data: 'user deleted successfully',
+      };
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
@@ -109,11 +114,6 @@ export class UsersController {
 
       throw new BadRequestException(`${error}`);
     }
-
-    return {
-      statusCode: HttpStatus.OK,
-      data: 'user deleted successfully',
-    };
   }
 
   @Patch(':id/roles')
@@ -121,6 +121,18 @@ export class UsersController {
     @Param('id') userId: string,
     @Body('roles') roleIds: number[],
   ) {
-    return this.usersService.updateUserRoles(userId, roleIds);
+    try {
+      await this.usersService.updateUserRoles(userId, roleIds);
+      return {
+        statusCode: HttpStatus.OK,
+        data: 'User roles updated successfully',
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      }
+
+      throw new BadRequestException(`${error}`);
+    }
   }
 }
