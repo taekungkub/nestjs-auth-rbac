@@ -25,6 +25,7 @@ services:
       POSTGRES_PASSWORD: nestpassword
       POSTGRES_DB: nestdb
       TZ: Asia/Bangkok # 🌟 ตั้งค่า Timezone เป็นไทย
+      PGTZ: Asia/Bangkok # ✅ บังคับให้ PostgreSQL ใช้ Timezone
     ports:
       - "5432:5432"
     volumes:

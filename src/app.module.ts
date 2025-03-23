@@ -32,9 +32,13 @@ import { ConfigModule } from '@nestjs/config';
       username: process.env.DB_USER || 'nestuser',
       password: process.env.DB_PASSWORD || 'nestpassword',
       database: process.env.DB_NAME || 'nestdb',
-      entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+      entities: [Album, User, Role, Permission],
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: process.env.NODE_ENV != 'production',
+      extra: {
+        timezone: 'Asia/Bangkok', // ✅ บังคับใช้ Timezone
+        options: '-c timezone=Asia/Bangkok', // 🔥 บังคับให้ PostgreSQL ใช้ GMT+7
+      },
       // timezone: '+07:00', // ตั้งค่าโซนเวลาไทย
     }),
     AlbumsModule,
