@@ -1,17 +1,34 @@
 version: '3.8'
 
+# services:
+#   mongo:
+#     image: mongo
+#     restart: always
+#     environment:
+#       - MONGO_INITDB_ROOT_USERNAME=root
+#       - MONGO_INITDB_ROOT_PASSWORD=example
+#     ports:
+#       - "27017:27017"
+#     volumes:
+#       - mongo-data:/data/db
+
+# volumes:
+#   mongo-data:
+#     driver: local
 services:
-  mongo:
-    image: mongo
+  postgres:
+    image: postgres:15
+    container_name: nestjs_postgres
     restart: always
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=example
+      POSTGRES_USER: nestuser
+      POSTGRES_PASSWORD: nestpassword
+      POSTGRES_DB: nestdb
+      TZ: Asia/Bangkok # 🌟 ตั้งค่า Timezone เป็นไทย
     ports:
-      - "27017:27017"
+      - "5432:5432"
     volumes:
-      - mongo-data:/data/db
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
-  mongo-data:
-    driver: local
+  postgres_data:
