@@ -44,4 +44,7 @@ export class User {
     inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' },
   })
   roles: Role[];
+
+  @Column({ type: 'text', nullable: true }) // Store image as Base64
+  picture?: string;
 }

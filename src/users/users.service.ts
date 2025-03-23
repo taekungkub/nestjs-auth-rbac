@@ -7,10 +7,12 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Connection, In, Repository } from 'typeorm';
+import { DataSource, In, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Role } from 'src/roles/entities/role.entity';
 import { plainToInstance } from 'class-transformer';
+import * as fs from 'fs';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 
 @Injectable()
 export class UsersService {
@@ -21,7 +23,7 @@ export class UsersService {
     @InjectRepository(Role)
     private readonly roleRepository: Repository<Role>,
 
-    private readonly connection: Connection, // ใช้ QueryRunner
+    private readonly dataSource: DataSource, // ใช้ QueryRunner
   ) {}
   async create(createUserDto: CreateUserDto) {
     const { password, username, email, roles } = createUserDto;
@@ -153,7 +155,7 @@ export class UsersService {
     }
 
     // ✅ ใช้ Transaction เพื่อให้ SQLite อัปเดต `user_roles` ได้ถูกต้อง
-    await this.connection.transaction(async (manager) => {
+    await this.dataSource.transaction(async (manager) => {
       // ✅ ลบ roles เดิมของ user
       await manager
         .createQueryBuilder()
@@ -179,5 +181,29 @@ export class UsersService {
     });
 
     return { message: 'User roles updated successfully' };
+  }
+
+  async updateProfile(
+    userId: string,
+    updateProfileDto: UpdateProfileDto,
+    file: Express.Multer.File,
+  ): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { userId } });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (updateProfileDto.name) {
+      user.name = updateProfileDto.name;
+    }
+    if (file) {
+      const base64Image = fs.readFileSync(file.path, 'base64');
+      user.picture = `data:${file.mimetype};base64,${base64Image}`;
+
+      fs.unlinkSync(file.path);
+    }
+
+    return this.userRepository.save(user);
   }
 }

@@ -10,16 +10,23 @@ import {
   NotFoundException,
   BadRequestException,
   UseGuards,
+  Put,
+  UseInterceptors,
+  Req,
+  UploadedFile,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { PermissionsGuard } from 'src/common/guards/permissions.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Permissions } from 'src/common/decorators/permissions.decorator';
 import { JwtGuard } from 'src/common/guards/jwt.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 
 @Controller('users')
 export class UsersController {
@@ -134,5 +141,32 @@ export class UsersController {
 
       throw new BadRequestException(`${error}`);
     }
+  }
+
+  @UseGuards(JwtGuard)
+  @Put('profile')
+  @UseInterceptors(
+    FileInterceptor('picture', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, cb) => {
+          const uniqueSuffix =
+            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          cb(null, uniqueSuffix + extname(file.originalname));
+        },
+      }),
+      limits: { fileSize: 5 * 1024 * 1024 }, // Limit file size to 5MB
+    }),
+  )
+  async updateProfile(
+    @Req() req,
+    @Body() updateProfileDto: UpdateProfileDto, // Accept multiple fields
+    @UploadedFile() file: Express.Multer.File, // Handle file separately
+  ) {
+    return this.usersService.updateProfile(
+      req.user['userId'],
+      updateProfileDto,
+      file,
+    );
   }
 }
