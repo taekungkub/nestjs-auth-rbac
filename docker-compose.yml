@@ -1,20 +1,5 @@
 version: '3.8'
 
-# services:
-#   mongo:
-#     image: mongo
-#     restart: always
-#     environment:
-#       - MONGO_INITDB_ROOT_USERNAME=root
-#       - MONGO_INITDB_ROOT_PASSWORD=example
-#     ports:
-#       - "27017:27017"
-#     volumes:
-#       - mongo-data:/data/db
-
-# volumes:
-#   mongo-data:
-#     driver: local
 services:
   postgres:
     image: postgres:15
@@ -24,12 +9,26 @@ services:
       POSTGRES_USER: nestuser
       POSTGRES_PASSWORD: nestpassword
       POSTGRES_DB: nestdb
-      TZ: Asia/Bangkok # 🌟 ตั้งค่า Timezone เป็นไทย
+      TZ: Asia/Bangkok
       PGTZ: Asia/Bangkok # ✅ บังคับให้ PostgreSQL ใช้ Timezone
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  nestjs-app:
+    build: .
+    container_name: nestjs_app
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+ 
+    depends_on:
+      - postgres
+    command: [ "npm", "run", "start:prod" ] # รันคำสั่งเพื่อเริ่มแอปในโหมด production
+
 volumes:
   postgres_data:
+
+

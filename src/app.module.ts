@@ -27,11 +27,11 @@ import { ConfigModule } from '@nestjs/config';
     // }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST || 'localhost',
-      port: 5432,
-      username: process.env.DB_USER || 'nestuser',
-      password: process.env.DB_PASSWORD || 'nestpassword',
-      database: process.env.DB_NAME || 'nestdb',
+      host: process.env.DB_HOST ?? 'localhost',
+      port: process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 5432,
+      username: process.env.DB_USER ?? 'nestuser',
+      password: process.env.DB_PASSWORD ?? 'nestpassword',
+      database: process.env.DB_NAME ?? 'nestdb',
       entities: [Album, User, Role, Permission],
       autoLoadEntities: true,
       synchronize: process.env.NODE_ENV != 'production',
@@ -39,7 +39,6 @@ import { ConfigModule } from '@nestjs/config';
         timezone: 'Asia/Bangkok', // ✅ บังคับใช้ Timezone
         options: '-c timezone=Asia/Bangkok', // 🔥 บังคับให้ PostgreSQL ใช้ GMT+7
       },
-      // timezone: '+07:00', // ตั้งค่าโซนเวลาไทย
     }),
     AlbumsModule,
     UsersModule,

@@ -1,5 +1,4 @@
-# ใช้ Node.js 18 เป็น base image
-FROM node:18
+FROM node:20-alpine
 
 # กำหนด working directory
 WORKDIR /usr/src/app
@@ -18,4 +17,4 @@ RUN npm run build
 EXPOSE 3000
 
 # สั่งให้ container รัน NestJS
-CMD ["npm", "run", "start:dev"]
+CMD ["node", "dist/main"]
