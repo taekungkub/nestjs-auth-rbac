@@ -1,7 +1,13 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  HttpStatus,
+  NotFoundException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { CreateUserDto } from '@/users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -42,5 +48,24 @@ export class AuthService {
     const accessToken = this.jwtService.sign(payload);
 
     return { access_token: accessToken };
+  }
+
+  async register(createUserDto: CreateUserDto) {
+    try {
+      const user = await this.usersService.create(createUserDto);
+
+      return {
+        statusCode: HttpStatus.OK,
+        data: {
+          ...user,
+        },
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      }
+
+      throw new BadRequestException(`${error}`);
+    }
   }
 }
