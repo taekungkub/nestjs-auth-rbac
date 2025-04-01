@@ -104,9 +104,9 @@ export class UsersController {
     };
   }
 
-  @UseGuards(JwtGuard, RolesGuard, PermissionsGuard)
-  @Roles('admin')
-  @Permissions('delete:user')
+  // @UseGuards(JwtGuard, RolesGuard, PermissionsGuard)
+  // @Roles('admin')
+  // @Permissions('delete:user')
   @Delete(':id')
   async remove(@Param('id') id: string) {
     try {

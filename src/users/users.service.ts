@@ -12,6 +12,7 @@ import * as bcrypt from 'bcrypt';
 import { Role } from 'src/roles/entities/role.entity';
 import { plainToInstance } from 'class-transformer';
 import * as fs from 'fs';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class UsersService {
@@ -38,7 +39,6 @@ export class UsersService {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // ✅ ค้นหา Roles ที่ส่งมา
-
     const roleEntities = await this.roleRepository.find({
       where: { id: In(roles) }, // ค้นหา roles ตาม ID
     });
@@ -55,6 +55,7 @@ export class UsersService {
     });
 
     await this.userRepository.save(user);
+    await this.updateUserRoles(user.userId, roles);
 
     return user;
   }
@@ -74,6 +75,8 @@ export class UsersService {
 
       return {
         ...user,
+        createdAt: user.localCreatedAt,
+        updatedAt: user.localUpdatedAt,
         roles: user.roles.map((role) => role.name), // ["admin", "user" , "guest"]
         permissions: Array.from(
           new Set(

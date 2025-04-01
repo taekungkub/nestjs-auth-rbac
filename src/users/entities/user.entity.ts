@@ -1,4 +1,11 @@
 import { Role } from '@/roles/entities/role.entity';
+import { Expose } from 'class-transformer';
+import dayjs from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 import {
   Column,
   CreateDateColumn,
@@ -20,7 +27,7 @@ export class User {
   @Column({ length: 30 })
   email: string;
 
-  @Column({ length: 100 })
+  @Column({ length: 100, select: false })
   password: string;
 
   @Column({ length: 30, nullable: true })
@@ -42,4 +49,18 @@ export class User {
 
   @Column({ type: 'text', nullable: true }) // Store image as Base64
   picture?: string;
+
+  @Expose()
+  get localUpdatedAt(): string {
+    return dayjs(this.updatedAt)
+      .tz('Asia/Bangkok')
+      .format('YYYY-MM-DD HH:mm:ss');
+  }
+
+  @Expose()
+  get localCreatedAt(): string {
+    return dayjs(this.createdAt)
+      .tz('Asia/Bangkok')
+      .format('YYYY-MM-DD HH:mm:ss');
+  }
 }
