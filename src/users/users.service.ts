@@ -12,7 +12,6 @@ import * as bcrypt from 'bcrypt';
 import { Role } from 'src/roles/entities/role.entity';
 import { plainToInstance } from 'class-transformer';
 import * as fs from 'fs';
-import dayjs from 'dayjs';
 
 @Injectable()
 export class UsersService {
@@ -25,6 +24,7 @@ export class UsersService {
 
     private readonly dataSource: DataSource, // ใช้ QueryRunner
   ) {}
+
   async create(createUserDto: CreateUserDto) {
     const { password, username, email, roles } = createUserDto;
 
@@ -205,7 +205,6 @@ export class UsersService {
     }
 
     if (updateUserDto.password && updateUserDto.oldPassword) {
-      // Compare old password with stored hashed password
       const isMatch = await bcrypt.compare(
         updateUserDto.oldPassword,
         user.password,

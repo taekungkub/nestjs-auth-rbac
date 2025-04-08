@@ -29,6 +29,7 @@ import { JwtGuard } from 'src/common/guards/jwt.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { UserInterceptor } from './interceptor/user.interceptor';
 
 @Controller('users')
 export class UsersController {
@@ -37,6 +38,7 @@ export class UsersController {
   @UseGuards(JwtGuard)
   // @Roles('admin')
   // @Permissions('create:user')
+  @UseInterceptors(UserInterceptor)
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     try {
