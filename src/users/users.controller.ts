@@ -96,6 +96,7 @@ export class UsersController {
   }
 
   @UseGuards(JwtGuard)
+  @UseInterceptors(UserInterceptor)
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     const user = await this.usersService.update(id, updateUserDto);
@@ -148,6 +149,7 @@ export class UsersController {
   }
 
   @UseGuards(JwtGuard)
+  @UseInterceptors(UserInterceptor)
   @Put('profile')
   @UseInterceptors(
     FileInterceptor('picture', {

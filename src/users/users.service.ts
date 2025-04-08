@@ -54,8 +54,9 @@ export class UsersService {
       password: hashedPassword,
     });
 
+    user.roles = roleEntities;
+
     await this.userRepository.save(user);
-    await this.updateUserRoles(user.userId, roles);
 
     return user;
   }
@@ -120,10 +121,6 @@ export class UsersService {
     Object.assign(user, filteredData);
 
     await this.userRepository.save(user);
-
-    if (updateUserDto.roles) {
-      await this.updateUserRoles(user.userId, updateUserDto.roles);
-    }
 
     return user;
   }
