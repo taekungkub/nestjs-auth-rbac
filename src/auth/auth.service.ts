@@ -1,19 +1,23 @@
 import {
   Injectable,
   BadRequestException,
-  HttpStatus,
   NotFoundException,
+  Inject,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '@/users/dto/create-user.dto';
+import refreshJwtConfig from './config/refresh-jwt.config';
+import { ConfigType } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    @Inject(refreshJwtConfig.KEY)
+    private readonly refreshTokenConfig: ConfigType<typeof refreshJwtConfig>,
   ) {}
 
   async validateUser(username: string, password: string) {
@@ -46,8 +50,9 @@ export class AuthService {
     console.log(payload);
 
     const accessToken = this.jwtService.sign(payload);
+    const refreshToken = this.jwtService.sign(payload, this.refreshTokenConfig);
 
-    return { access_token: accessToken };
+    return { access_token: accessToken, refresh_token: refreshToken };
   }
 
   async register(createUserDto: CreateUserDto) {
@@ -55,7 +60,6 @@ export class AuthService {
       const user = await this.usersService.create(createUserDto);
 
       return {
-        statusCode: HttpStatus.OK,
         data: {
           ...user,
         },
@@ -67,5 +71,24 @@ export class AuthService {
 
       throw new BadRequestException(`${error}`);
     }
+  }
+
+  async refreshToken(userId: string) {
+    const user = await this.usersService.findOne(userId);
+
+    const payload = {
+      userId: user.userId,
+      username: user.username,
+      email: user.email,
+      name: user.name,
+      role: user.roles,
+      permissions: user.permissions,
+    };
+
+    const token = this.jwtService.sign(payload);
+    return {
+      userId,
+      token,
+    };
   }
 }
