@@ -10,6 +10,8 @@ import { ConfigModule } from '@nestjs/config';
 import { RefreshJwtStrategy } from './strategies/refresh.strategy';
 import jwtConfig from './config/jwt.config';
 import refreshJwtConfig from './config/refresh-jwt.config';
+import { AuthLogListener } from './events/auth-log.listener';
+import { ClsModule } from 'nestjs-cls';
 
 @Module({
   imports: [
@@ -18,8 +20,15 @@ import refreshJwtConfig from './config/refresh-jwt.config';
     JwtModule.registerAsync(jwtConfig.asProvider()),
     ConfigModule.forFeature(jwtConfig),
     ConfigModule.forFeature(refreshJwtConfig),
+    ClsModule,
   ],
-  providers: [AuthService, JwtStrategy, LocalStrategy, RefreshJwtStrategy],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    LocalStrategy,
+    RefreshJwtStrategy,
+    AuthLogListener,
+  ],
   controllers: [AuthController],
 })
 export class AuthModule {}

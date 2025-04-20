@@ -12,6 +12,8 @@ import * as bcrypt from 'bcrypt';
 import { Role } from 'src/roles/entities/role.entity';
 import { plainToInstance } from 'class-transformer';
 import * as fs from 'fs';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { LogEvent } from '@/common/events/log-event';
 
 @Injectable()
 export class UsersService {
@@ -23,6 +25,8 @@ export class UsersService {
     private readonly roleRepository: Repository<Role>,
 
     private readonly dataSource: DataSource, // ใช้ QueryRunner
+
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -57,6 +61,19 @@ export class UsersService {
     user.roles = roleEntities;
 
     await this.userRepository.save(user);
+
+    this.eventEmitter.emit(
+      'user.created',
+      new LogEvent(
+        user.userId,
+        user.username,
+        [''],
+        'user.created',
+        'สร้างผู้ใช้ใหม่',
+        '/users',
+        '',
+      ),
+    );
 
     return user;
   }

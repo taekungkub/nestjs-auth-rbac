@@ -12,6 +12,9 @@ import { Role } from './roles/entities/role.entity';
 import { PermissionModule } from './permission/permission.module';
 import { Permission } from './permission/entities/permission.entity';
 import { ConfigModule } from '@nestjs/config';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ClsModule } from 'nestjs-cls';
+import { CLS_IP_ADDRESS, CLS_USER_AGENT } from './common/cls.constants';
 
 @Module({
   imports: [
@@ -41,6 +44,18 @@ import { ConfigModule } from '@nestjs/config';
       extra: {
         timezone: 'Asia/Bangkok', // ✅ บังคับใช้ Timezone
         options: '-c timezone=Asia/Bangkok', // 🔥 บังคับให้ PostgreSQL ใช้ GMT+7
+      },
+    }),
+    EventEmitterModule.forRoot(),
+    ClsModule.forRoot({
+      middleware: {
+        // automatically mount the
+        // ClsMiddleware for all routes
+        mount: true,
+        setup: (cls, req) => {
+          cls.set(CLS_USER_AGENT, req.headers['user-agent']);
+          cls.set(CLS_IP_ADDRESS, req.ip);
+        },
       },
     }),
     AlbumsModule,

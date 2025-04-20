@@ -10,6 +10,8 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '@/users/dto/create-user.dto';
 import refreshJwtConfig from './config/refresh-jwt.config';
 import { ConfigType } from '@nestjs/config';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { LogEvent } from '@/common/events/log-event';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +20,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     @Inject(refreshJwtConfig.KEY)
     private readonly refreshTokenConfig: ConfigType<typeof refreshJwtConfig>,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async validateUser(username: string, password: string) {
@@ -51,6 +54,19 @@ export class AuthService {
 
     const accessToken = this.jwtService.sign(payload);
     const refreshToken = this.jwtService.sign(payload, this.refreshTokenConfig);
+
+    this.eventEmitter.emit(
+      'auth.login',
+      new LogEvent(
+        user.userId,
+        user.username,
+        user.roles,
+        'login',
+        'เข้าสู่ระบบสำเร็จ',
+        '/login',
+        '',
+      ),
+    );
 
     return { access_token: accessToken, refresh_token: refreshToken };
   }
