@@ -30,6 +30,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { UserInterceptor } from './interceptor/user.interceptor';
+import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
 
 @Controller('users')
 export class UsersController {
@@ -62,6 +63,8 @@ export class UsersController {
   @UseGuards(JwtGuard, RolesGuard, PermissionsGuard)
   @Roles(['admin'])
   @Permissions(['read:user'])
+  @UseInterceptors(CacheInterceptor)
+  @CacheKey('users')
   @Get()
   async findAll() {
     try {

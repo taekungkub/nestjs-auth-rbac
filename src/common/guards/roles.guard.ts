@@ -25,7 +25,7 @@ export class RolesGuard implements CanActivate {
     // ดึง user จาก request
     const request = context.switchToHttp().getRequest();
     const user = request.user;
-    console.log('👤 User from JWT:', user);
+    // console.log('👤 User from JWT:', user);
 
     if (!user || !user.roles) {
       throw new ForbiddenException('Access denied');

@@ -15,7 +15,9 @@ import { ConfigModule } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ClsModule } from 'nestjs-cls';
 import { CLS_IP_ADDRESS, CLS_USER_AGENT } from './common/cls.constants';
-import { CacheModule } from '@nestjs/cache-manager';
+import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -59,14 +61,25 @@ import { CacheModule } from '@nestjs/cache-manager';
         },
       },
     }),
-    CacheModule.register(),
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 10 * 1000, // Cache expiration time in milliseconds
+      max: 100, // maximum number of items in cache
+    }),
     AlbumsModule,
     UsersModule,
     AuthModule,
     RolesModule,
     PermissionModule,
+    NotificationModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
+    },
+  ],
 })
 export class AppModule {}
