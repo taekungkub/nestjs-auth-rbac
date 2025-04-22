@@ -59,7 +59,9 @@ export class UsersController {
     }
   }
 
-  @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard, RolesGuard, PermissionsGuard)
+  @Roles(['admin'])
+  @Permissions(['read:user'])
   @Get()
   async findAll() {
     try {

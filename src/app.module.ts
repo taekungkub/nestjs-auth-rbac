@@ -15,6 +15,7 @@ import { ConfigModule } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ClsModule } from 'nestjs-cls';
 import { CLS_IP_ADDRESS, CLS_USER_AGENT } from './common/cls.constants';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { CLS_IP_ADDRESS, CLS_USER_AGENT } from './common/cls.constants';
         },
       },
     }),
+    CacheModule.register(),
     AlbumsModule,
     UsersModule,
     AuthModule,

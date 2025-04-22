@@ -5,6 +5,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { IRole } from '../types/role.type';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -12,7 +13,7 @@ export class RolesGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     // ดึง role ที่ต้องการจาก @Roles()
-    const requiredRoles = this.reflector.get<string[]>(
+    const requiredRoles = this.reflector.get<IRole[]>(
       'roles',
       context.getHandler(),
     );
