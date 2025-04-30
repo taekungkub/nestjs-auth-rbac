@@ -1,8 +1,10 @@
+import { IRole } from '../types/role.type';
+
 export class LogEvent {
   constructor(
     public readonly user_id: string,
     public readonly username: string,
-    public readonly role: string[],
+    public readonly role: IRole[],
     public readonly action: string,
     public readonly description?: string,
     public readonly url?: string,

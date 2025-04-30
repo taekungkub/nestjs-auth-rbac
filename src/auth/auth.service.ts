@@ -13,6 +13,8 @@ import { ConfigType } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { LogEvent } from '@/common/events/log-event';
 import { NotificationService } from '@/notification/notification.service';
+import { Role } from '@/roles/entities/role.entity';
+import { IRole } from '@/common/types/role.type';
 
 @Injectable()
 export class AuthService {
@@ -62,7 +64,7 @@ export class AuthService {
       new LogEvent(
         user.userId,
         user.username,
-        user.roles,
+        user.roles as IRole[],
         'login',
         'เข้าสู่ระบบสำเร็จ',
         '/login',

@@ -14,6 +14,7 @@ import { plainToInstance } from 'class-transformer';
 import * as fs from 'fs';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { LogEvent } from '@/common/events/log-event';
+import { IRole } from '@/common/types/role.type';
 
 @Injectable()
 export class UsersService {
@@ -67,7 +68,7 @@ export class UsersService {
       new LogEvent(
         user.userId,
         user.username,
-        [''],
+        user.roles as unknown as IRole[],
         'user.created',
         'สร้างผู้ใช้ใหม่',
         '/users',
