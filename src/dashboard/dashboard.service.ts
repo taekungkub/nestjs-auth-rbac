@@ -29,6 +29,16 @@ export class DashboardService {
     const start = new Date(dto.startDate);
     const end = new Date(dto.endDate);
 
+    // แบบ raw query
+    // return this.userRepository
+    //   .createQueryBuilder('user') // Alias user table as 'user'
+    //   .leftJoin('user.roles', 'role') // Join roles relation with alias 'role'
+    //   .select(['user', 'role']) // Select all columns from both 'u' (user) and 'role'
+    //   .where('user.createdAt BETWEEN :start AND :end', { start, end })
+    //   .andWhere('role.name = :roleName', { roleName: 'user' })
+    //   .orderBy('user.createdAt', 'DESC')
+    //   .getMany();
+
     return this.userRepository.find({
       where: {
         createdAt: Between(start, end),
