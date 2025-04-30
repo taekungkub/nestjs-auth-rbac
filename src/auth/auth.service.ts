@@ -12,6 +12,7 @@ import refreshJwtConfig from './config/refresh-jwt.config';
 import { ConfigType } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { LogEvent } from '@/common/events/log-event';
+import { NotificationService } from '@/notification/notification.service';
 
 @Injectable()
 export class AuthService {
@@ -21,6 +22,7 @@ export class AuthService {
     @Inject(refreshJwtConfig.KEY)
     private readonly refreshTokenConfig: ConfigType<typeof refreshJwtConfig>,
     private readonly eventEmitter: EventEmitter2,
+    private readonly notificationService: NotificationService,
   ) {}
 
   async validateUser(username: string, password: string) {
@@ -74,6 +76,8 @@ export class AuthService {
   async register(createUserDto: CreateUserDto) {
     try {
       const user = await this.usersService.create(createUserDto);
+
+      this.notificationService.send(`📩 New user registered: ${user.email}`);
 
       return {
         data: {

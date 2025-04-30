@@ -1,4 +1,3 @@
-// notification.service.ts
 import { Injectable } from '@nestjs/common';
 import { Subject } from 'rxjs';
 
@@ -13,4 +12,11 @@ export class NotificationService {
   send(message: string) {
     this.notificationStream.next({ message });
   }
+
+  // onModuleInit() {
+  //   // Mock: send a new message every 1 second
+  //   interval(1000).subscribe((count) => {
+  //     this.send(`Mock message #${count + 1}`);
+  //   });
+  // }
 }

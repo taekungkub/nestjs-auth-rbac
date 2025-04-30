@@ -12,6 +12,7 @@ import jwtConfig from './config/jwt.config';
 import refreshJwtConfig from './config/refresh-jwt.config';
 import { AuthLogListener } from './events/auth-log.listener';
 import { ClsModule } from 'nestjs-cls';
+import { NotificationModule } from '@/notification/notification.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ClsModule } from 'nestjs-cls';
     ConfigModule.forFeature(jwtConfig),
     ConfigModule.forFeature(refreshJwtConfig),
     ClsModule,
+    NotificationModule,
   ],
   providers: [
     AuthService,
