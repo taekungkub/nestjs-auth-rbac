@@ -11,14 +11,6 @@ export class DashboardService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  create(createDashboardDto: CreateDashboardDto) {
-    return 'This action adds a new dashboard';
-  }
-
-  findAll() {
-    return `This action returns all dashboard`;
-  }
-
   async getUsersRegisteredInLast30Days(): Promise<User[]> {
     const date = new Date();
     date.setDate(date.getDate() - 30);

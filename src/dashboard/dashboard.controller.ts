@@ -6,11 +6,6 @@ import { CreateDashboardDto } from './dto/create-dashboard.dto';
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
-  @Post()
-  create(@Body() createDashboardDto: CreateDashboardDto) {
-    return this.dashboardService.create(createDashboardDto);
-  }
-
   @Get('user_last_30_days')
   getUserFromLast30Days() {
     return this.dashboardService.getUsersRegisteredInLast30Days();
