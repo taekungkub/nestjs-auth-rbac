@@ -1,4 +1,4 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateDashboardDto } from './create-dashboard.dto';
+import { SearchDashboardDto } from './search-dashboard.dto';
 
-export class UpdateDashboardDto extends PartialType(CreateDashboardDto) {}
+export class UpdateDashboardDto extends PartialType(SearchDashboardDto) {}

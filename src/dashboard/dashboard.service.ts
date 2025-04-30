@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateDashboardDto } from './dto/create-dashboard.dto';
+import { SearchDashboardDto } from './dto/search-dashboard.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@/users/entities/user.entity';
 import { Between, MoreThan, Repository } from 'typeorm';
@@ -25,7 +25,7 @@ export class DashboardService {
     });
   }
 
-  async getUsersInDateRange(dto: CreateDashboardDto): Promise<User[]> {
+  async getUsersInDateRange(dto: SearchDashboardDto): Promise<User[]> {
     const start = new Date(dto.startDate);
     const end = new Date(dto.endDate);
 

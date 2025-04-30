@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
-import { CreateDashboardDto } from './dto/create-dashboard.dto';
+import { SearchDashboardDto } from './dto/search-dashboard.dto';
 
 @Controller('dashboard')
 export class DashboardController {
@@ -12,7 +12,7 @@ export class DashboardController {
   }
 
   @Post('get_users_in_date_range')
-  getUsersInDateRange(@Body() createDashboardDto: CreateDashboardDto) {
-    return this.dashboardService.getUsersInDateRange(createDashboardDto);
+  getUsersInDateRange(@Body() searchDashboardDto: SearchDashboardDto) {
+    return this.dashboardService.getUsersInDateRange(searchDashboardDto);
   }
 }
