@@ -18,6 +18,7 @@ import { CLS_IP_ADDRESS, CLS_USER_AGENT } from './common/cls.constants';
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { NotificationModule } from './notification/notification.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -72,6 +73,7 @@ import { NotificationModule } from './notification/notification.module';
     RolesModule,
     PermissionModule,
     NotificationModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [
