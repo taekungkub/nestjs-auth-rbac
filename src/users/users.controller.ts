@@ -42,22 +42,14 @@ export class UsersController {
   @UseInterceptors(UserInterceptor)
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
-    try {
-      const user = await this.usersService.create(createUserDto);
+    const user = await this.usersService.create(createUserDto);
 
-      return {
-        statusCode: HttpStatus.OK,
-        data: {
-          ...user,
-        },
-      };
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new NotFoundException(error.message);
-      }
-
-      throw new BadRequestException(`${error}`);
-    }
+    return {
+      statusCode: HttpStatus.OK,
+      data: {
+        ...user,
+      },
+    };
   }
 
   @UseGuards(JwtGuard, RolesGuard, PermissionsGuard)
@@ -67,37 +59,21 @@ export class UsersController {
   @CacheKey('users')
   @Get()
   async findAll() {
-    try {
-      const user = await this.usersService.findAll();
+    const user = await this.usersService.findAll();
 
-      return {
-        statusCode: HttpStatus.OK,
-        data: user,
-      };
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new NotFoundException(error.message);
-      }
-
-      throw new BadRequestException(`${error}`);
-    }
+    return {
+      statusCode: HttpStatus.OK,
+      data: user,
+    };
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    try {
-      const user = await this.usersService.findOne(id);
-      return {
-        statusCode: HttpStatus.OK,
-        data: user,
-      };
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new NotFoundException(error.message);
-      }
-
-      throw new BadRequestException(`${error}`);
-    }
+    const user = await this.usersService.findOne(id);
+    return {
+      statusCode: HttpStatus.OK,
+      data: user,
+    };
   }
 
   @UseGuards(JwtGuard)
@@ -117,20 +93,12 @@ export class UsersController {
   // @Permissions('delete:user')
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    try {
-      await this.usersService.remove(id);
+    await this.usersService.remove(id);
 
-      return {
-        statusCode: HttpStatus.OK,
-        data: 'user deleted successfully',
-      };
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new NotFoundException(error.message);
-      }
-
-      throw new BadRequestException(`${error}`);
-    }
+    return {
+      statusCode: HttpStatus.OK,
+      data: 'user deleted successfully',
+    };
   }
 
   @Patch(':id/roles')
@@ -138,19 +106,11 @@ export class UsersController {
     @Param('id') userId: string,
     @Body('roles') roleIds: number[],
   ) {
-    try {
-      await this.usersService.updateUserRoles(userId, roleIds);
-      return {
-        statusCode: HttpStatus.OK,
-        data: 'User roles updated successfully',
-      };
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new NotFoundException(error.message);
-      }
-
-      throw new BadRequestException(`${error}`);
-    }
+    await this.usersService.updateUserRoles(userId, roleIds);
+    return {
+      statusCode: HttpStatus.OK,
+      data: 'User roles updated successfully',
+    };
   }
 
   @UseGuards(JwtGuard)
@@ -183,23 +143,15 @@ export class UsersController {
     )
     file: Express.Multer.File,
   ) {
-    try {
-      const user = await this.usersService.updateProfile(
-        req.user['userId'],
-        updateProfileDto,
-        file,
-      );
+    const user = await this.usersService.updateProfile(
+      req.user['userId'],
+      updateProfileDto,
+      file,
+    );
 
-      return {
-        statusCode: HttpStatus.OK,
-        data: user,
-      };
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new NotFoundException(error.message);
-      }
-
-      throw new BadRequestException(`${error}`);
-    }
+    return {
+      statusCode: HttpStatus.OK,
+      data: user,
+    };
   }
 }

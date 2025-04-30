@@ -76,23 +76,15 @@ export class AuthService {
   }
 
   async register(createUserDto: CreateUserDto) {
-    try {
-      const user = await this.usersService.create(createUserDto);
+    const user = await this.usersService.create(createUserDto);
 
-      this.notificationService.send(`📩 New user registered: ${user.email}`);
+    this.notificationService.send(`📩 New user registered: ${user.email}`);
 
-      return {
-        data: {
-          ...user,
-        },
-      };
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new NotFoundException(error.message);
-      }
-
-      throw new BadRequestException(`${error}`);
-    }
+    return {
+      data: {
+        ...user,
+      },
+    };
   }
 
   async refreshToken(userId: string) {
