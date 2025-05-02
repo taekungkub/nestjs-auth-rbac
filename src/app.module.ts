@@ -13,12 +13,12 @@ import { PermissionModule } from './permission/permission.module';
 import { Permission } from './permission/entities/permission.entity';
 import { ConfigModule } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { ClsModule } from 'nestjs-cls';
-import { CLS_IP_ADDRESS, CLS_USER_AGENT } from './common/cls.constants';
+import { ClsModule, ClsService } from 'nestjs-cls';
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { NotificationModule } from './notification/notification.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { MyClsStore } from './common/types/myclsstore.type';
 
 @Module({
   imports: [
@@ -56,9 +56,9 @@ import { DashboardModule } from './dashboard/dashboard.module';
         // automatically mount the
         // ClsMiddleware for all routes
         mount: true,
-        setup: (cls, req) => {
-          cls.set(CLS_USER_AGENT, req.headers['user-agent']);
-          cls.set(CLS_IP_ADDRESS, req.ip);
+        setup: (cls: ClsService<MyClsStore>, req) => {
+          cls.set('userAgent', req.headers['user-agent']);
+          cls.set('ipAddress', req.ip);
         },
       },
     }),
