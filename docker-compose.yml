@@ -10,7 +10,7 @@ services:
       POSTGRES_PASSWORD: nestpassword
       POSTGRES_DB: nestdb
       TZ: Asia/Bangkok
-      PGTZ: Asia/Bangkok # ✅ บังคับให้ PostgreSQL ใช้ Timezone
+      PGTZ: Asia/Bangkok
     ports:
       - "5432:5432"
     volumes:
@@ -26,7 +26,7 @@ services:
       - .env.production
     depends_on:
       - postgres
-    command: [ "npm", "run", "start:prod" ] # รันคำสั่งเพื่อเริ่มแอปในโหมด production
+    command: [ "npm", "run", "start:prod" ]
 
 volumes:
   postgres_data:
