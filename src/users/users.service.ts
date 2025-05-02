@@ -14,7 +14,6 @@ import { plainToInstance } from 'class-transformer';
 import * as fs from 'fs';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { LogEvent } from '@/common/events/log-event';
-import { IRole } from '@/common/types/role.type';
 
 @Injectable()
 export class UsersService {
