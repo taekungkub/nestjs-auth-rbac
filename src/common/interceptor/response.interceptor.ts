@@ -45,6 +45,7 @@ export class ResponseTransformInterceptor implements NestInterceptor {
 
         return {
           statusCode: 200,
+          ...data,
           data: convertedData,
         };
       }),

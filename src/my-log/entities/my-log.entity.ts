@@ -16,7 +16,7 @@ export class MyLog {
   @Column()
   user_id: string;
 
-  @ManyToOne(() => User, (user) => user.logs, { eager: false })
+  @ManyToOne(() => User, (user) => user.logs, { eager: true })
   @JoinColumn({ name: 'user_id' })
   user: User;
 

@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { MyLogService } from './my-log.service';
 import { CreateMyLogDto } from './dto/create-my-log.dto';
+import { SearchMyLogDTO } from './dto/search-my-log.dto';
 
 @Controller('my-log')
 export class MyLogController {
@@ -11,8 +12,8 @@ export class MyLogController {
     return this.myLogService.create(createMyLogDto);
   }
 
-  @Get()
-  findAll() {
-    return this.myLogService.findAll();
+  @Post('/getMyLogs')
+  async findAll(@Body() searchMyLogDTO: SearchMyLogDTO) {
+    return this.myLogService.findAll(searchMyLogDTO);
   }
 }
