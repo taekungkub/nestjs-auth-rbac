@@ -34,7 +34,7 @@ export class MyLogService {
       where: whereConditions,
       skip,
       take: limit,
-      order: { id: 'DESC' },
+      order: { createdAt: 'DESC' },
     });
 
     return {

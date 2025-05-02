@@ -1,4 +1,3 @@
-// interceptors/response-transform.interceptor.ts
 import {
   Injectable,
   NestInterceptor,
@@ -39,15 +38,32 @@ export class ResponseTransformInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       map((data) => {
-        if (!data) return data;
+        if (!data) {
+          return { statusCode: 200, data: null };
+        }
 
-        const convertedData = convertDatesToLocal(data.data ?? data);
+        // ดึงข้อมูลหลัก
+        const extractedData = data.data ?? data;
 
-        return {
+        // แปลงวันที่ภายในข้อมูล
+        const convertedData = convertDatesToLocal(extractedData);
+
+        // เตรียม response เบื้องต้น
+        const response: any = {
           statusCode: 200,
-          ...data,
           data: convertedData,
         };
+
+        // แนบ field อื่น ๆ ที่มากับ response (เช่น count, totalPage, meta, etc.)
+        if (data && typeof data === 'object' && 'data' in data) {
+          Object.entries(data).forEach(([key, value]) => {
+            if (key !== 'data') {
+              response[key] = value;
+            }
+          });
+        }
+
+        return response;
       }),
     );
   }
