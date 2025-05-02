@@ -7,7 +7,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { DataSource, In, Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Role } from 'src/roles/entities/role.entity';
 import { plainToInstance } from 'class-transformer';
@@ -23,8 +23,6 @@ export class UsersService {
 
     @InjectRepository(Role)
     private readonly roleRepository: Repository<Role>,
-
-    private readonly dataSource: DataSource, // ใช้ QueryRunner
 
     private readonly eventEmitter: EventEmitter2,
   ) {}
@@ -166,32 +164,17 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException(`User with ID ${userId} not found`);
     }
-
-    // ✅ ใช้ Transaction เพื่อให้ SQLite อัปเดต `user_roles` ได้ถูกต้อง
-    await this.dataSource.transaction(async (manager) => {
-      // ✅ ลบ roles เดิมของ user
-      await manager
-        .createQueryBuilder()
-        .delete()
-        .from('user_roles')
-        .where('user_id = :userId', { userId })
-        .execute();
-
-      // ✅ ถ้ามี roles ใหม่ให้เพิ่มเข้าไป
-      if (roleIds.length > 0) {
-        const values = roleIds.map((roleId) => ({
-          user_id: userId,
-          role_id: roleId,
-        }));
-
-        await manager
-          .createQueryBuilder()
-          .insert()
-          .into('user_roles')
-          .values(values)
-          .execute();
-      }
+    const roleEntities = await this.roleRepository.find({
+      where: { id: In(roleIds) },
     });
+
+    if (roleEntities.length !== roleIds.length) {
+      throw new BadRequestException('Invalid role ID(s)');
+    }
+
+    user.roles = roleEntities;
+
+    await this.userRepository.save(user);
 
     return { message: 'User roles updated successfully' };
   }
