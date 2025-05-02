@@ -19,6 +19,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { NotificationModule } from './notification/notification.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { MyClsStore } from './common/types/myclsstore.type';
+import { MyLogModule } from './my-log/my-log.module';
 
 @Module({
   imports: [
@@ -74,6 +75,7 @@ import { MyClsStore } from './common/types/myclsstore.type';
     PermissionModule,
     NotificationModule,
     DashboardModule,
+    MyLogModule,
   ],
   controllers: [AppController],
   providers: [

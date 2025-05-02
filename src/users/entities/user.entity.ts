@@ -1,3 +1,4 @@
+import { MyLog } from '@/my-log/entities/my-log.entity';
 import { Role } from '@/roles/entities/role.entity';
 import { Expose } from 'class-transformer';
 import dayjs from 'dayjs';
@@ -12,6 +13,7 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -49,6 +51,9 @@ export class User {
 
   @Column({ type: 'text', nullable: true }) // Store image as Base64
   picture?: string;
+
+  @OneToMany(() => MyLog, (log) => log.user, { eager: false })
+  logs: MyLog[];
 
   @Expose()
   get localUpdatedAt(): string {

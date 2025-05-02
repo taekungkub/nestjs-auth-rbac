@@ -61,15 +61,12 @@ export class AuthService {
 
     this.eventEmitter.emit(
       'auth.login',
-      new LogEvent(
-        user.userId,
-        user.username,
-        user.roles as IRole[],
-        'login',
-        'เข้าสู่ระบบสำเร็จ',
-        '/login',
-        '',
-      ),
+      new LogEvent({
+        user_id: user.userId,
+        action: 'login',
+        description: 'เข้าสู่ระบบสำเร็จ',
+        url: '/login',
+      }),
     );
 
     return { access_token: accessToken, refresh_token: refreshToken };

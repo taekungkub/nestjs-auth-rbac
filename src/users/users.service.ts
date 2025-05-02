@@ -64,16 +64,13 @@ export class UsersService {
     await this.userRepository.save(user);
 
     this.eventEmitter.emit(
-      'user.created',
-      new LogEvent(
-        user.userId,
-        user.username,
-        user.roles as unknown as IRole[],
-        'user.created',
-        'สร้างผู้ใช้ใหม่',
-        '/users',
-        '',
-      ),
+      'auth.login',
+      new LogEvent({
+        user_id: user.userId,
+        action: 'user.created',
+        description: 'สร้างผู้ใช้ใหม่',
+        url: '/users',
+      }),
     );
 
     return user;
