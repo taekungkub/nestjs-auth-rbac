@@ -1,6 +1,7 @@
 import { User } from '@/users/entities/user.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -36,4 +37,7 @@ export class MyLog {
 
   @Column({ type: 'jsonb', nullable: true })
   data: Record<string, any>;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
 }

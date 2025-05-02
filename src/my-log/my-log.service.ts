@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMyLogDto } from './dto/create-my-log.dto';
-import { UpdateMyLogDto } from './dto/update-my-log.dto';
 import { MyLog } from './entities/my-log.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

@@ -18,7 +18,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('user') // ตรงกับชื่อ table
+@Entity('user')
 export class User {
   @PrimaryGeneratedColumn()
   userId: string;
@@ -35,10 +35,10 @@ export class User {
   @Column({ length: 30, nullable: true })
   name?: string;
 
-  @CreateDateColumn({ type: 'timestamp' }) // Auto set when row is created
+  @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' }) // Auto update when row is modified
+  @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 
   @ManyToMany(() => Role, (role) => role.name, { eager: true, cascade: true })
