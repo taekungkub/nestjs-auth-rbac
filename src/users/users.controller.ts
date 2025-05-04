@@ -7,8 +7,6 @@ import {
   Param,
   Delete,
   HttpStatus,
-  NotFoundException,
-  BadRequestException,
   UseGuards,
   Put,
   UseInterceptors,
@@ -19,7 +17,7 @@ import {
   FileTypeValidator,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, UserResponseDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { PermissionsGuard } from 'src/common/guards/permissions.guard';
@@ -31,6 +29,7 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { UserInterceptor } from './interceptor/user.interceptor';
 import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
+import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('users')
 export class UsersController {
@@ -58,9 +57,9 @@ export class UsersController {
   @UseInterceptors(CacheInterceptor)
   @CacheKey('users')
   @Get()
+  @ApiResponse({ status: 200, description: 'Success', type: UserResponseDto })
   async findAll() {
     const user = await this.usersService.findAll();
-
     return {
       statusCode: HttpStatus.OK,
       data: user,

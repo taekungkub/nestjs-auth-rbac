@@ -1,3 +1,5 @@
+import { IRole } from '@/common/types/role.type';
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsArray,
   IsEmail,
@@ -35,4 +37,27 @@ export class CreateUserDto {
 
   @IsOptional()
   picture?: string;
+}
+
+export class UserResponse {
+  @ApiProperty()
+  userId: string;
+  @ApiProperty()
+  username: string;
+  @ApiProperty()
+  email: string;
+  @ApiProperty()
+  name?: string;
+  @ApiProperty({ example: ['admin', 'user', 'guest'] as IRole[] })
+  roles: string[];
+  @ApiProperty()
+  picture?: string;
+}
+
+export class UserResponseDto {
+  @ApiProperty({ example: 200 })
+  statusCode: number;
+
+  @ApiProperty({ type: UserResponse })
+  data: UserResponse;
 }
