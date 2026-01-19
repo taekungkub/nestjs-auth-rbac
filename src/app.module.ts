@@ -20,7 +20,8 @@ import { NotificationModule } from './notification/notification.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { MyClsStore } from './common/types/myclsstore.type';
 import { MyLogModule } from './my-log/my-log.module';
-
+import { ScheduleModule } from '@nestjs/schedule';
+import { CronService } from './cron.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -76,6 +77,7 @@ import { MyLogModule } from './my-log/my-log.module';
     NotificationModule,
     DashboardModule,
     MyLogModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [
@@ -84,6 +86,7 @@ import { MyLogModule } from './my-log/my-log.module';
       provide: APP_INTERCEPTOR,
       useClass: CacheInterceptor,
     },
+    CronService,
   ],
 })
 export class AppModule {}

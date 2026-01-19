@@ -92,3 +92,16 @@ $ mau deploy
 ```
 
 With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+
+
+## Backup
+### Backup
+```bash
+$ docker compose exec -T postgres pg_dump -U nestuser nestdb > ./backups/backup.sql
+
+```
+### Restore
+```bash
+$ docker compose exec -T postgres psql -U nestuser -d nestdb < ./backups/backup.sql
+```
+
