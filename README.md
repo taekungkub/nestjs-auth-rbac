@@ -97,11 +97,11 @@ With Mau, you can deploy your application in just a few clicks, allowing you to 
 ## Backup
 ### Backup
 ```bash
-$ docker compose exec -T postgres pg_dump -U nestuser nestdb > ./backups/backup.sql
+$ docker compose exec -T postgres pg_dump -U nestuser nestdb > ./backups/nestdb.dump
 
 ```
 ### Restore
 ```bash
-$ docker compose exec -T postgres psql -U nestuser -d nestdb < ./backups/backup.sql
+$ docker compose exec -T postgres psql -U nestuser -d nestdb < ./backups/nestdb.dump
 ```
 
